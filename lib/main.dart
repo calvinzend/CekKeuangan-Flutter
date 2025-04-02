@@ -4,18 +4,21 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 
+import 'detail.dart';
+import 'Input.dart';
+
 void main() {
-  runApp(MaterialApp(title: 'Flutter Demo', home: Home()));
+  runApp(MaterialApp(title: 'Flutter Demo', home: InfoKeuanganPage(),debugShowCheckedModeBanner: false,));
 }
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class InfoKeuanganPage extends StatefulWidget {
+  const InfoKeuanganPage({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  State<InfoKeuanganPage> createState() => _InfoKeuanganState();
 }
 
-class _HomeState extends State<Home> {
+class _InfoKeuanganState extends State<InfoKeuanganPage> {
 
   List dataJSON = [];
   Future<void> _loadData() async {
@@ -90,9 +93,16 @@ class _HomeState extends State<Home> {
               ),
             ),
              InkWell(
-              onTap: () {
-                print("Info Input clicked");
-              },
+              onTap: () async {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => InputKeuanganPage()),
+                  );
+
+                  if (result == true) {
+                    _loadData(); // Refresh data setelah input berhasil
+                  }
+                },
               child: ListTile(
                 title: Text("Input Keuangan"),
                 trailing: Icon(Icons.input),
@@ -101,6 +111,10 @@ class _HomeState extends State<Home> {
 
             InkWell(
               onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => DetailKeuanganPage()),
+              );
                 print("Detail Keuangan clicked");
               },
               child: ListTile(
@@ -165,22 +179,4 @@ class _HomeState extends State<Home> {
   }
 }
 
-class InfoKeuanganPage extends StatelessWidget {
-  const InfoKeuanganPage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Info Keuangan'),
-        backgroundColor: Colors.red[700],
-      ),
-      body: Center(
-        child: Text(
-          'Ini adalah halaman Info Keuangan',
-          style: TextStyle(fontSize: 20.0),
-        ),
-      ),
-    );
-  }
-}
